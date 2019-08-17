@@ -7,9 +7,9 @@
 //
 
 #import "ViewController.h"
-
+#import "Masonry.h"
 @interface ViewController ()<CAAnimationDelegate>
-@property (nonatomic, strong)UIImageView *rotateImg;
+@property (nonatomic, strong)UIImageView *pointImage;
 @property (nonatomic, assign)NSInteger circleAngle;
 @property (nonatomic, assign)BOOL isAnimation;
 @end
@@ -19,24 +19,34 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    _circleAngle = 0;
-    UIImageView *rotateImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"jiantou_up_w"]];
-    self.rotateImg = rotateImg;
-    rotateImg.frame = CGRectMake(0, 0, 54, 54);
-    rotateImg.center = self.view.center;
-    rotateImg.layer.anchorPoint = CGPointMake(0.5, 1);
-    [self.view addSubview:rotateImg];
     
+    _circleAngle = 0;
+    //背景
+    UIImageView *bgImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"pk_zhuanpan"]];
+    [self.view addSubview:bgImage];
+    [bgImage mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.equalTo(self.view);
+        make.width.height.mas_equalTo(@135);
+    }];
+    //指针
+    UIImageView *pointImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"pk_zhizhen"]];
+    self.pointImage = pointImage;
+    pointImage.layer.anchorPoint = CGPointMake(0.5, 0.5);
+    [self.view addSubview:pointImage];
+    [pointImage mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.equalTo(bgImage);
+        make.width.height.mas_equalTo(@109);
+    }];
+    //先手按钮
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    button.frame = CGRectMake(80, 100, 80, 80);
-    [button setTitle:@"点我" forState:UIControlStateNormal];
-    button.backgroundColor = [UIColor blueColor];
-    button.titleLabel.font = [UIFont systemFontOfSize:13.f];
-    [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    button.layer.cornerRadius = 8.f;
-    button.layer.masksToBounds = YES;
+    [button setImage:[UIImage imageNamed:@"pk_zhongxin"] forState:UIControlStateNormal];
     [button addTarget:self action:@selector(clickButton) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:button];
+    [button mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.equalTo(bgImage);
+        make.width.height.mas_equalTo(@41);
+    }];
+    
 }
 
 -(void)clickButton{
@@ -89,7 +99,7 @@
     rotaionAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
     rotaionAnimation.fillMode=kCAFillModeForwards;
     rotaionAnimation.removedOnCompletion = NO;
-    [self.rotateImg.layer addAnimation:rotaionAnimation forKey:@"rotationAnimation"];
+    [self.pointImage.layer addAnimation:rotaionAnimation forKey:@"rotationAnimation"];
     
 }
 
